@@ -41,7 +41,8 @@ func IP181() (result []*models.IP) {
 	err := json.Unmarshal(body, &ips)
 
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("ip181 error: ", err)
+		return
 	}
 
 	results = ips.Results

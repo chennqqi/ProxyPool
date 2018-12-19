@@ -6,8 +6,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/chennqqi/proxypool/pkg/models"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/chennqqi/proxypool/pkg/models"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -22,8 +22,8 @@ func GBJ() (result []*models.IP) {
 	}
 	fmt.Println(resp.Body)
 	if resp.StatusCode != 200 {
-		fmt.Println(resp.StatusCode)
-		fmt.Println(errs)
+		fmt.Println("GBJ code:", resp.StatusCode)
+		fmt.Println("GBJ error:", errs)
 		return
 	}
 	doc, err := goquery.NewDocumentFromReader(resp.Body)

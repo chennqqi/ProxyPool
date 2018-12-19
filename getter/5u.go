@@ -5,8 +5,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/chennqqi/proxypool/pkg/models"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/chennqqi/proxypool/pkg/models"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -27,7 +27,7 @@ func Data5u() (result []*models.IP) {
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	resp.Body.Close()
 	if err != nil {
-		log.Println(err.Error())
+		log.Println("Data5u: ", err.Error())
 		return
 	}
 
