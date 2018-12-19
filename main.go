@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/henson/ProxyPool/api"
-	"github.com/henson/ProxyPool/getter"
-	"github.com/henson/ProxyPool/storage"
+	"github.com/chennqqi/ProxyPool/api"
+	"github.com/chennqqi/ProxyPool/getter"
+	"github.com/chennqqi/ProxyPool/storage"
 )
 
 func main() {
