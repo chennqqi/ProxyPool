@@ -5,19 +5,21 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/henson/ProxyPool/storage"
-	"github.com/henson/ProxyPool/util"
+	"github.com/chennqqi/proxypool/pkg/setting"
+	"github.com/chennqqi/proxypool/pkg/storage"
 )
 
 // VERSION for this program
-const VERSION = "/v1"
+const VERSION = "/v2"
 
 // Run for request
 func Run() {
+
 	mux := http.NewServeMux()
 	mux.HandleFunc(VERSION+"/ip", ProxyHandler)
-	log.Println("Starting server", util.NewConfig().Host)
-	http.ListenAndServe(util.NewConfig().Host, mux)
+	mux.HandleFunc(VERSION+"/https", FindHandler)
+	log.Println("Starting server", setting.AppAddr+":"+setting.AppPort)
+	http.ListenAndServe(setting.AppAddr+":"+setting.AppPort, mux)
 }
 
 // ProxyHandler .
@@ -25,6 +27,18 @@ func ProxyHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		w.Header().Set("content-type", "application/json")
 		b, err := json.Marshal(storage.ProxyRandom())
+		if err != nil {
+			return
+		}
+		w.Write(b)
+	}
+}
+
+// FindHandler .
+func FindHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		w.Header().Set("content-type", "application/json")
+		b, err := json.Marshal(storage.ProxyFind("https"))
 		if err != nil {
 			return
 		}

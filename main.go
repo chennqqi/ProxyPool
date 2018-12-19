@@ -6,15 +6,20 @@ import (
 	"sync"
 	"time"
 
-	"github.com/chennqqi/ProxyPool/api"
-	"github.com/chennqqi/ProxyPool/getter"
-	"github.com/chennqqi/ProxyPool/storage"
+	"github.com/chennqqi/proxypool/api"
+	"github.com/chennqqi/proxypool/getter"
+	"github.com/chennqqi/proxypool/pkg/initial"
+	"github.com/chennqqi/proxypool/pkg/models"
+	"github.com/chennqqi/proxypool/pkg/storage"
 )
 
 func main() {
+
+	//init the database
+	initial.GlobalInit()
+
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	ipChan := make(chan string, 1000)
-	conn := storage.NewStorage()
+	ipChan := make(chan *models.IP, 2000)
 
 	// Start HTTP
 	go func() {
@@ -37,8 +42,8 @@ func main() {
 
 	// Start getters to scraper IP and put it in channel
 	for {
-		x := conn.Count()
-		log.Printf("Chan: %v, IP: %v\n", len(ipChan), x)
+		n := models.CountIPs()
+		log.Printf("Chan: %v, IP: %v\n", len(ipChan), n)
 		if len(ipChan) < 100 {
 			go run(ipChan)
 		}
@@ -46,19 +51,22 @@ func main() {
 	}
 }
 
-func run(ipChan chan<- string) {
+func run(ipChan chan<- *models.IP) {
 	var wg sync.WaitGroup
-	funs := []func() []string{
+	funs := []func() []*models.IP{
+		//getter.Data5u,
 		getter.IP66,
-		getter.KDL,
-		getter.GBJ,
-		getter.Xici,
+		//getter.KDL,
+		//getter.GBJ,	//因为网站限制，无法正常下载数据
+		//getter.Xici,
+		//getter.XDL,
 		getter.IP181,
-		getter.YDL,
+		//getter.YDL,	//失效的采集脚本，用作系统容错实验
+		getter.PLP,
 	}
 	for _, f := range funs {
 		wg.Add(1)
-		go func(f func() []string) {
+		go func(f func() []*models.IP) {
 			temp := f()
 			for _, v := range temp {
 				ipChan <- v
