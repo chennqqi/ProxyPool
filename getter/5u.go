@@ -23,7 +23,7 @@ func Data5u() (result []*models.IP) {
 		log.Println(errs)
 		return
 	}
-	fmt.Println(resp.Body)
+	fmt.Println("data5u, respBody:", resp.Body)
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	resp.Body.Close()
 	if err != nil {

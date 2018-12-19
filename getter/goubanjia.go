@@ -20,7 +20,7 @@ func GBJ() (result []*models.IP) {
 		log.Println(errs)
 		return
 	}
-	fmt.Println(resp.Body)
+	fmt.Println("GBJ body:", resp.Body)
 	if resp.StatusCode != 200 {
 		fmt.Println("GBJ code:", resp.StatusCode)
 		fmt.Println("GBJ error:", errs)
